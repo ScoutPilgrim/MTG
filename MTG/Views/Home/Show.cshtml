@@ -1,0 +1,26 @@
+@{
+    Layout="_Layout";
+}
+@using MTG.Models;
+
+<a href="/">Back to your collection</a>
+
+@foreach(Card card in @Model)
+{
+    <li>@card.Name</li>
+    <ul>
+        <li><b>Mana:</b> @card.Mana</li>
+        @if(@card.Type != "")
+        { 
+            <li><b>Type:</b> @card.Type</li> 
+        }
+        <li><b>Color:</b> @card.Color</li>
+        <li><b>Set:</b> @card.Card_Set</li>
+        <li><b>Description:</b> @card.Description</li>
+        @if(@card.Power != -1 || @card.Toughness != -1)
+        {
+            <li>@card.Power / @card.Toughness</li>
+        }
+        <img src="@card.ImageLink" alt="image not found"/>
+    </ul>
+}

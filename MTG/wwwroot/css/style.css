@@ -1,0 +1,15 @@
+.grid1{
+    display: grid;
+    font-family: fantasy;
+    grid-template: auto / 3fr 3fr 3fr;
+    border: black solid 2px;
+    padding: 20px;
+}
+h1{
+    font-family: fantasy;
+    text-align: center;
+}
+.grid2{
+    display: grid;
+    grid-template: auto / 1fr 1fr 1fr 1fr;
+}

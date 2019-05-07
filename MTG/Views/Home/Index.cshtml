@@ -1,0 +1,87 @@
+@{
+    Layout = "_Layout";
+}
+@using MTG.Models;
+    <h1>Magic: The Gathering Card Collection</h1>
+    <form action="/create" method="post">
+
+    <div class="grid1">
+        <div>
+            <label for="name">Name:</label>
+            <input id="name" name="name" type="text"/><br>
+
+            <label for="mana">Mana Cost:</label>
+            <input id="mana" name="mana" type="text"/><br>
+
+            <label for="type">Type:</label>
+            <input id="type" name="type" type="text"/><br>
+        </div>
+
+        <div>
+                <label for="color">Color:</label>
+            <input id="color" name="color" type="text"/><br>
+
+            <label for="description">Description:</label>
+            <textarea rows="1" id="description" name="description" type="text"></textarea><br>
+
+            <label for="power">Power:</label>
+            <input id="power" name="power" type="number"/><br>
+        </div>
+
+        
+        <div>
+            <label for="toughness">Toughness:</label>
+                <input id="toughness" name="toughness" type="number"/><br>
+
+                <label for="set">Set:</label>
+                <input id="set" name="set" type="text"/><br>
+
+                <label for="image">Link to Image:</label>
+                <input id="image" name="image" type="text"/><br>
+
+                <button type="submit">Submit</button>
+        </div>
+    </div>    
+    </form>
+
+
+<form action="/search" method="post">
+    <label for="search">Search</label>
+    <input id="search" name="search" type="text"/>
+    <select name="column">
+        <option value="name">Name</option>
+        <option value="color">Color</option>
+        <option value="type">Type</option>
+        <option value="card_set">Set</option>
+        <option value="power">Power</option>
+        <option value="toughness">Toughness</option>
+    </select>
+
+    <button type="submit">Search</button>
+</form>
+
+   
+    <div class=grid2>
+        @foreach(Card card in @Model)
+        {                
+            <div>
+            <li><b>@card.Name</b></li>
+            <ul>
+                <li><b>Mana:</b> @card.Mana</li>
+                @if(@card.Type != "")
+                { 
+                    <li><b>Type:</b> @card.Type</li> 
+                }
+                <li><b>Color:</b> @card.Color</li>
+                <li><b>Set:</b> @card.Card_Set</li>
+                <li><b>Description:</b> @card.Description</li>
+                @if(@card.Power != 0 || @card.Toughness != 0)
+                {
+                    <li>@card.Power / @card.Toughness</li>
+                }
+                <img src="@card.ImageLink" alt="image not found"/>
+            </ul>
+            </div>
+        }
+    </div>
+   
