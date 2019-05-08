@@ -144,22 +144,22 @@ namespace MTG.Models
 
             while(rdr.Read())
             {
-                int cId = rdr.GetInt32(0);
-                string cName = rdr.GetString(1);
-                string cMana = rdr.GetString(2);
-                string cColor = rdr.GetString(3);
-                string cType = rdr.GetString(4);
-                string cDescription = rdr.GetString(5);
-                int cPower = rdr.GetInt32(6);
-                int cToughness = rdr.GetInt32(7);
-                string cSet = rdr.GetString(8);
-                string cImage = "";
-                if(!rdr.IsDBNull(9))
-                {
-                    cImage = rdr.GetString(9);
-                }
+                // int cId = rdr.GetInt32(0);
+                // string cName = rdr.GetString(1);
+                // string cMana = rdr.GetString(2);
+                // string cColor = rdr.GetString(3);
+                // string cType = rdr.GetString(4);
+                // string cDescription = rdr.GetString(5);
+                // int cPower = rdr.GetInt32(6);
+                // int cToughness = rdr.GetInt32(7);
+                // string cSet = rdr.GetString(8);
+                // string cImage = "";
+                // if(!rdr.IsDBNull(9))
+                // {
+                //     cImage = rdr.GetString(9);
+                // }
             
-                Card card = new Card(cName, cMana, cColor, cType, cDescription, cSet, cPower, cToughness, cImage, cId);
+                Card card = Card.ReadCardObj(rdr); //new Card(cName, cMana, cColor, cType, cDescription, cSet, cPower, cToughness, cImage, cId);
                 allCards.Add(card);
             }
 
@@ -193,18 +193,18 @@ namespace MTG.Models
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
             {
-                int cId = rdr.GetInt32(0);
-                string cName = rdr.GetString(1);
-                string cMana = rdr.GetString(2);
-                string cColor = rdr.GetString(3);
-                string cType = rdr.GetString(4);
-                string cDescription = rdr.GetString(5);
-                int cPower = rdr.GetInt32(6);
-                int cToughness = rdr.GetInt32(7);
-                string cSet = rdr.GetString(8);
-                string cImage = rdr.GetString(9);
+                // int cId = rdr.GetInt32(0);
+                // string cName = rdr.GetString(1);
+                // string cMana = rdr.GetString(2);
+                // string cColor = rdr.GetString(3);
+                // string cType = rdr.GetString(4);
+                // string cDescription = rdr.GetString(5);
+                // int cPower = rdr.GetInt32(6);
+                // int cToughness = rdr.GetInt32(7);
+                // string cSet = rdr.GetString(8);
+                // string cImage = rdr.GetString(9);
             
-                Card card = new Card(cName, cMana, cColor, cType, cDescription, cSet, cPower, cToughness, cImage, cId);
+                Card card = Card.ReadCardObj(rdr);//new Card(cName, cMana, cColor, cType, cDescription, cSet, cPower, cToughness, cImage, cId);
                 cards.Add(card);
             }
 
@@ -229,6 +229,43 @@ namespace MTG.Models
                 Card card = (Card) obj;
                 return this.Id == card.Id && this.Name == card.Name && this.Card_Set == card.Card_Set;
             }
+        }
+
+        public static Card ReadCardObj(MySqlDataReader rdr)
+        {
+                int cId = rdr.GetInt32(0);
+                string cName = rdr.GetString(1);
+                string cMana = rdr.GetString(2);
+                string cColor = rdr.GetString(3);
+                string cType = rdr.GetString(4);
+                string cDescription = rdr.GetString(5);
+                int cPower = rdr.GetInt32(6);
+                int cToughness = rdr.GetInt32(7);
+                string cSet = rdr.GetString(8);
+                string cImage = "";
+                if(!rdr.IsDBNull(9))
+                {
+                    cImage = rdr.GetString(9);
+                }
+            
+                return new Card(cName, cMana, cColor, cType, cDescription, cSet, cPower, cToughness, cImage, cId);
+        }
+
+        public static Card BuildCardObj(int cardId)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText =  @"SELECT * FROM cards WHERE id = @id;";
+            MySqlParameter thisId = new MySqlParameter("@id", cardId);
+            cmd.Parameters.Add(thisId);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            Card retCard = null;
+            while(rdr.Read())
+            {
+                retCard = Card.ReadCardObj(rdr);
+            }
+            return retCard;
         }
 
 
