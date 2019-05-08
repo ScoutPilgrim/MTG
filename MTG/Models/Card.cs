@@ -143,23 +143,8 @@ namespace MTG.Models
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
 
             while(rdr.Read())
-            {
-                // int cId = rdr.GetInt32(0);
-                // string cName = rdr.GetString(1);
-                // string cMana = rdr.GetString(2);
-                // string cColor = rdr.GetString(3);
-                // string cType = rdr.GetString(4);
-                // string cDescription = rdr.GetString(5);
-                // int cPower = rdr.GetInt32(6);
-                // int cToughness = rdr.GetInt32(7);
-                // string cSet = rdr.GetString(8);
-                // string cImage = "";
-                // if(!rdr.IsDBNull(9))
-                // {
-                //     cImage = rdr.GetString(9);
-                // }
-            
-                Card card = Card.ReadCardObj(rdr); //new Card(cName, cMana, cColor, cType, cDescription, cSet, cPower, cToughness, cImage, cId);
+            {                
+                Card card = Card.ReadCardObj(rdr);
                 allCards.Add(card);
             }
 
@@ -192,19 +177,8 @@ namespace MTG.Models
 
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
-            {
-                // int cId = rdr.GetInt32(0);
-                // string cName = rdr.GetString(1);
-                // string cMana = rdr.GetString(2);
-                // string cColor = rdr.GetString(3);
-                // string cType = rdr.GetString(4);
-                // string cDescription = rdr.GetString(5);
-                // int cPower = rdr.GetInt32(6);
-                // int cToughness = rdr.GetInt32(7);
-                // string cSet = rdr.GetString(8);
-                // string cImage = rdr.GetString(9);
-            
-                Card card = Card.ReadCardObj(rdr);//new Card(cName, cMana, cColor, cType, cDescription, cSet, cPower, cToughness, cImage, cId);
+            {            
+                Card card = Card.ReadCardObj(rdr);
                 cards.Add(card);
             }
 
