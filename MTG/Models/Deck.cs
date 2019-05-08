@@ -23,7 +23,8 @@ namespace MTG.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"DELETE FROM decks;";
+            
+            cmd.CommandText = @"DELETE FROM decks; DELETE FROM cards_in_deck;";
             cmd.ExecuteNonQuery();
 
             conn.Close();
@@ -33,6 +34,50 @@ namespace MTG.Models
             }
         }
 
+        public void RemoveCard(Card card)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+
+            cmd.CommandText = @"SELECT count FROM cards_in_deck WHERE deckId = @deckId AND cardId = @cardId;";
+            MySqlParameter cardId = new MySqlParameter("@cardId", card.Id);
+            MySqlParameter deckId = new MySqlParameter("@deckId", this.Id);
+            cmd.Parameters.Add(cardId);
+            cmd.Parameters.Add(deckId);
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            int count = 0;
+            while(rdr.Read())
+            {
+                if(rdr.GetInt32(0) > 0)
+                {
+                    count = rdr.GetInt32(0);
+                    count--;
+                }
+            }
+            rdr.Close();
+            if(count <= 0)
+            {
+                cmd.CommandText = @"DELETE FROM cards_in_deck WHERE deckId = @deckId AND cardId = @cardId;";
+                cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                cmd.CommandText = @"UPDATE cards_in_deck SET count = @Count WHERE cardId = @cardId AND deckId = @deckId;";
+                MySqlParameter newCount = new MySqlParameter("@Count", count);
+                cmd.Parameters.Add(newCount);
+                cmd.ExecuteNonQuery();
+            }
+
+            conn.Close();
+            if(conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+        
+        
         public void AddCard(Card card)
         {
             MySqlConnection conn = DB.Connection();
@@ -47,18 +92,12 @@ namespace MTG.Models
  
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             
-            Console.WriteLine("adding card");
-
             bool wasFound = false;
             int count = 0;
             while(rdr.Read())
             {
-
-                Console.WriteLine("add card reading");
-
                 if(rdr.HasRows)
                 {
-                    Console.WriteLine("has rows");
                     count = rdr.GetInt32(0);
                     if(count < 4)
                     {
@@ -66,10 +105,6 @@ namespace MTG.Models
                     }
                     wasFound = true;
                 }
-                else
-                {
-                    wasFound = false;
-                }   
             }
             rdr.Close();
 
@@ -79,11 +114,9 @@ namespace MTG.Models
                 MySqlParameter newCount = new MySqlParameter("@Count", count);
                 cmd.Parameters.Add(newCount);
                 cmd.ExecuteNonQuery();
-
             }
             else
             {
-                Console.WriteLine("no rows found");
                 cmd.CommandText = @"INSERT INTO cards_in_deck (cardId, deckId, count) VALUES (@cardId, @deckId, 1);";
                 cmd.ExecuteNonQuery();
             }
@@ -102,7 +135,6 @@ namespace MTG.Models
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
             cmd.CommandText = @"INSERT INTO decks (name) VALUES (@Name);";
-
             MySqlParameter name = new MySqlParameter("@Name", this.Name);
             cmd.Parameters.Add(name);
       
@@ -123,8 +155,8 @@ namespace MTG.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM decks;";
             
+            cmd.CommandText = @"SELECT * FROM decks;";
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
             {
@@ -134,6 +166,7 @@ namespace MTG.Models
                 Deck deck = new Deck(name, id);
                 allDecks.Add(deck);
             }
+            
             conn.Close();
             if(conn != null)
             {
@@ -143,7 +176,35 @@ namespace MTG.Models
             return allDecks;
         }
 
-        public List<Card> GetCardsInDeck()
+        // public Card GetCardInDeck()
+        // {
+        //     MySqlConnection conn = DB.Connection();
+        //     conn.Open();
+            
+        //     MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+        //     cmd.CommandText = @"SELECT * FROM cards_in_deck WHERE deckId = @deckId AND cardId = @cardId;";
+            
+        //     MySqlParameter deckId = new MySqlParameter("@deckId", this.Id);
+        //     cmd.Parameters.Add(deckId);
+        //     MySqlParameter cardId = new MySqlParameter("@cardId", card.Id);
+        //     cmd.Parameters.Add(deckId);
+            
+        //     MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+        //     while(rdr.Read())
+        //     {
+        //         int cardId= rdr.GetInt32(1);
+        //         foundCards.Add(Card.BuildCardObj(cardId));
+        //     }
+        //     conn.Close();
+        //     if(conn != null)
+        //     {
+        //         conn.Dispose();
+        //     }
+        //     return foundCards;
+
+        // }
+
+        public List<Card> GetAllCardsInDeck()
         {
             List<Card> foundCards = new List<Card>();
             MySqlConnection conn = DB.Connection();
@@ -168,6 +229,5 @@ namespace MTG.Models
             }
             return foundCards;
         }
-
     }
 }
