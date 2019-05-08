@@ -160,26 +160,6 @@ namespace MTG.Tests
 
             List<Card> cards = deck.GetAllCardsInDeck();
             Assert.AreEqual(0, cards.Count);
-
-            // MySqlConnection conn = DB.Connection();
-            // conn.Open();
-            // MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-
-            // cmd.CommandText = @"SELECT count FROM cards_in_deck WHERE deckId = @DeckId AND cardId = @CardId;";
-            // MySqlParameter deckId = new MySqlParameter("@DeckId", deck.Id);
-            // MySqlParameter cardId = new MySqlParameter("@CardId", card.Id);
-            // cmd.Parameters.Add(deckId);
-            // cmd.Parameters.Add(cardId);
-
-            // MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
-            // int result = 0;
-            // while(rdr.Read())
-            // {
-            //     result = rdr.GetInt32(0);
-            // }
-
-
-
         }
     }
 }
