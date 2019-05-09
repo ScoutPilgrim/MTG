@@ -1,0 +1,10 @@
+@{
+    Layout = "_Layout";
+}
+
+@using MTG.Models;
+
+<h1>@Model.Name()</h1>
+<hr>
+
+@foreach(Card card in Deck.GetAllCardsInDeck())

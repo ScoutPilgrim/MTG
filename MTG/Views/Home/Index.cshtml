@@ -45,10 +45,10 @@
     </form>
 
 
-<form action="/search" method="post">
-    <label for="search">Search</label>
-    <input id="search" name="search" type="text"/>
-    <select name="column">
+<form action="/search/{column}" method="post">
+    <label for="searchString">Search</label>
+    <input id="searchString" name="searchString" type="text"/>
+    <select name="column" id="column">
         <option value="name">Name</option>
         <option value="color">Color</option>
         <option value="type">Type</option>
@@ -60,28 +60,29 @@
     <button type="submit">Search</button>
 </form>
 
-   
-    <div class=grid2>
-        @foreach(Card card in @Model)
-        {                
-            <div>
-            <li><b>@card.Name</b></li>
-            <ul>
-                <li><b>Mana:</b> @card.Mana</li>
-                @if(@card.Type != "")
-                { 
-                    <li><b>Type:</b> @card.Type</li> 
-                }
-                <li><b>Color:</b> @card.Color</li>
-                <li><b>Set:</b> @card.Card_Set</li>
-                <li><b>Description:</b> @card.Description</li>
-                @if(@card.Power != 0 || @card.Toughness != 0)
-                {
-                    <li>@card.Power / @card.Toughness</li>
-                }
-                <img src="@card.ImageLink" alt="image not found"/>
-            </ul>
-            </div>
-        }
-    </div>
+<a href="/decks">See your decks</a>
+
+<div class=grid2>
+    @foreach(Card card in @Model)
+    {                
+        <div>
+        <li><b>@card.Name</b></li>
+        <ul>
+            <li><b>Mana:</b> @card.Mana</li>
+            @if(@card.Type != "")
+            { 
+                <li><b>Type:</b> @card.Type</li> 
+            }
+            <li><b>Color:</b> @card.Color</li>
+            <li><b>Set:</b> @card.Card_Set</li>
+            <li><b>Description:</b> @card.Description</li>
+            @if(@card.Power != 0 || @card.Toughness != 0)
+            {
+                <li>@card.Power / @card.Toughness</li>
+            }
+            <img src="@card.ImageLink" alt="image not found"/>
+        </ul>
+        </div>
+    }
+</div>
    

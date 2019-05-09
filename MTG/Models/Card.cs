@@ -159,26 +159,29 @@ namespace MTG.Models
 
         public static List<Card> Search(string searchColumn, string search)
         {
+            //DEBUG
+            Console.WriteLine("Card.Search: "+search + " " + searchColumn);
+
             List<Card> cards = new List<Card>{};
 
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM cards WHERE @SearchColumn LIKE '@Search';";
-            MySqlParameter searchStr = new MySqlParameter();
-            searchStr.ParameterName = "@Search";
-            searchStr.Value = search;
-            MySqlParameter searchCol = new MySqlParameter();
-            searchCol.ParameterName = "@SearchColumn";
-            searchCol.Value = searchColumn;
+            
+            cmd.CommandText = @"SELECT * FROM cards WHERE "+searchColumn+" LIKE @Search;";
 
+            MySqlParameter searchStr = new MySqlParameter("@Search", search);
             cmd.Parameters.Add(searchStr);
-            cmd.Parameters.Add(searchCol);
-
+        
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())
-            {            
+            {        
                 Card card = Card.ReadCardObj(rdr);
+                
+                //DEBUG
+                Console.WriteLine(card.Name);
+                Console.WriteLine("reading");
+                
                 cards.Add(card);
             }
 
@@ -187,6 +190,9 @@ namespace MTG.Models
             {
                 conn.Dispose();
             }
+
+            //DEBUG
+            Console.WriteLine(cards.Count);
 
             return cards;
         }

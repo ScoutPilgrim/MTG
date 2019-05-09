@@ -15,7 +15,8 @@ namespace MTG.Controllers
         }
 
         [HttpPost("/create")]
-        public ActionResult Create(string name, string mana, string type, string color, string description, int power, int toughness, string set, string image)
+        public ActionResult Create(string name, string mana, string type, string color, 
+        string description, int power, int toughness, string set, string image)
         {
             Card card = new Card(name, mana, color, type, description, set, power, toughness, image);
             card.Save();
@@ -23,16 +24,14 @@ namespace MTG.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost("/search")]
-        public ActionResult Show(string search, string column)
+        [HttpPost("/search/{column}")]
+        public ActionResult Show(string searchString, string column)
         {
-
-            Console.WriteLine("search: "+search);
-            Console.WriteLine("column: "+column);
-            
-
-            //List<Card> list = Card.ShowColor(color);
-            List<Card> searchResults = Card.Search(column, search);
+            //DEBUG
+            // Console.WriteLine("search: "+searchString);
+            // Console.WriteLine("column: "+column);
+                        
+            List<Card> searchResults = Card.Search(column, searchString);
             return View(searchResults);
         }
     }

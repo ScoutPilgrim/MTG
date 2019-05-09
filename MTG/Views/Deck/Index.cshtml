@@ -1,0 +1,22 @@
+@{
+    Layout = "_Layout";
+}
+@using MTG.Models;
+
+<h1>Your Decks</h1>
+<hr>
+
+<form action="/decks/new" method="post">
+    <label for="name">Name</label>
+    <input name="name" id="name" type="text" required/>
+    <button type="submit">Create Deck</button>
+</form>
+
+<ul>
+
+    @foreach(Deck deck in Model)
+    {
+        <li><a href="/decks/{@deck.Id}">@deck.Name</a></li>
+    }
+
+</ul>
